@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BLEEMGApp</string>
+    <string name="connect_ble_device">Connect BLE Device</string>
+</resources>
