@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView emgValueText;
     private Button connectButton;
 
+    private CircularBuffer<Integer> emgBuffer = new CircularBuffer<>(300); // buffer for recent EMG values
+
     private static final String[] ALL_BLE_PERMISSIONS = new String[]{
             Manifest.permission.BLUETOOTH_SCAN,
             Manifest.permission.BLUETOOTH_CONNECT,
@@ -142,8 +144,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
+
             final byte[] emg = characteristic.getValue();
             int emgValue = Byte.toUnsignedInt(emg[0]);
+            emgBuffer.add(emgValue); // add the new value to the buffer
+
+            Log.d(TAG, "EMG Value: " + emgValue);
             runOnUiThread(() -> emgValueText.setText("EMG Data: " + emgValue));
         }
     };
